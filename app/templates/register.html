@@ -1,0 +1,45 @@
+<!-- templates/register.html
+Register template page for webapp -->
+
+{% extends "partials/layout.html" %}
+
+{% block title %}SecureBank - Register{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        {% if mode == 'vulnerable' %}
+        <div class="mode-badge vulnerable">⚠️ VULNERABLE MODE</div>
+        {% else %}
+        <div class="mode-badge secured">🔒 SECURED MODE</div>
+        <div class="info-box">
+            <strong>Requirements:</strong><br>
+            • Username: 3-50 chars, alphanumeric<br>
+            • Password: Minimum 6 characters
+        </div>
+        {% endif %}
+        
+        <h1>🏦 Register</h1>
+        
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+        
+        <form method="POST">
+            <div class="form-group">
+                <label>Username:</label>
+                <input type="text" name="username" required>
+            </div>
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" name="password" required>
+            </div>
+            <button type="submit" class="btn-primary">Register</button>
+        </form>
+        
+        <div class="link">
+            <a href="/login">Already have an account? Login</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,98 @@
+<!-- template/dashboard.html
+Template page for main dashboard page (shows transactions) -->
+
+{% extends "partials/layout.html" %}
+
+{% block title %}Dashboard - SecureBank{% endblock %}
+
+{% block content %}
+<div class="header">
+    <div class="header-left">
+        <h1>🏦 SecureBank</h1>
+        <span class="mode-badge-header {% if mode == 'vulnerable' %}vulnerable{% else %}secured{% endif %}">
+            {% if mode == 'vulnerable' %}⚠️ VULNERABLE{% else %}🔒 SECURED{% endif %}
+        </span>
+    </div>
+    <div class="header-right">
+        <span>Welcome, {% if mode == 'secured' %}{{ user[1]|e }}{% else %}{{ user[1] }}{% endif %}!</span>
+        <a href="/logout" class="btn-danger">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+    {% if mode == 'vulnerable' %}
+    <div class="security-info vulnerable-info">
+        ⚠️ VULNERABLE MODE: Try XSS, SQL injection, command injection, or DoS attacks
+    </div>
+    {% else %}
+    <div class="security-info secured-info">
+        ✓ SECURED MODE: All inputs sanitized | SQL injection protected | XSS prevented | Rate limiting active
+    </div>
+    {% endif %}
+    
+    <div class="card">
+        <h2>Account Overview</h2>
+        <div class="balance">${{ "%.2f"|format(user[4]) }}</div>
+        
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">Account Type</div>
+                <div class="info-value">{% if mode == 'secured' %}{{ user[5]|e }}{% else %}{{ user[5] }}{% endif %}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Username</div>
+                <div class="info-value">{% if mode == 'secured' %}{{ user[1]|e }}{% else %}{{ user[1] }}{% endif %}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Account ID</div>
+                <div class="info-value">#{{ user[0] }}</div>
+            </div>
+        </div>
+        
+        <form method="POST" action="/check_balance" class="form-inline">
+            <input type="text" name="account_id" placeholder="{% if mode == 'vulnerable' %}Enter account ID (Try: 1; ls -la){% else %}Enter account ID (numbers only){% endif %}" {% if mode == 'secured' %}pattern="[0-9]+" required{% endif %}>
+            <button type="submit" class="btn-primary">Check Balance</button>
+        </form>
+    </div>
+    
+    <div class="card">
+        <h2>Quick Transfer</h2>
+        <form method="POST" action="/transfer" class="form-inline">
+            <input type="text" name="recipient" placeholder="Recipient username" {% if mode == 'secured' %}pattern="[a-zA-Z0-9_]{3,50}" required{% endif %}>
+            <input type="number" name="amount" placeholder="Amount" step="0.01" {% if mode == 'secured' %}min="0.01" max="10000" required{% endif %}>
+            <button type="submit" class="btn-primary">Transfer</button>
+        </form>
+        {% if mode == 'secured' %}
+        <p class="form-note">Maximum transfer: $10,000 | Rate limited to 5 per minute</p>
+        {% else %}
+        <p class="form-note vulnerable-note">No rate limiting - vulnerable to DoS attacks</p>
+        {% endif %}
+    </div>
+    
+    <div class="card">
+        <h2>Recent Transactions</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trans in transactions %}
+                    <tr>
+                        <td>{% if mode == 'secured' %}{{ trans[5]|e }}{% else %}{{ trans[5] }}{% endif %}</td>
+                        <td>{% if mode == 'secured' %}{{ trans[2]|e }}{% else %}{{ trans[2] }}{% endif %}</td>
+                        <td>${{ "%.2f"|format(trans[3]) }}</td>
+                        <td>{% if mode == 'secured' %}{{ trans[4]|e }}{% else %}{{ trans[4] }}{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

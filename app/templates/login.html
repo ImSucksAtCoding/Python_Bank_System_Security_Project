@@ -1,0 +1,64 @@
+<!-- templates/login.html
+Login template page for webapp -->
+{% extends "partials/layout.html" %}
+
+{% block title %}SecureBank - Login{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="mode-toggle">
+            <form method="POST" action="/toggle_security">
+                <label>Security Mode:</label>
+                <select name="mode" id="mode">
+                    <option value="vulnerable" {% if mode == 'vulnerable' %}selected{% endif %}>Vulnerable (Educational)</option>
+                    <option value="secured" {% if mode == 'secured' %}selected{% endif %}>Secured (Best Practices)</option>
+                </select>
+                <button type="submit" class="btn-secondary">Switch Mode</button>
+            </form>
+        </div>
+        
+        {% if mode == 'vulnerable' %}
+        <div class="mode-badge vulnerable">⚠️ VULNERABLE MODE ACTIVE</div>
+        {% else %}
+        <div class="mode-badge secured">🔒 SECURED MODE ACTIVE</div>
+        {% endif %}
+        
+        <h1>🏦 SecureBank Login</h1>
+        
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+        
+        <form method="POST" action="/login">
+            <div class="form-group">
+                <label>Username:</label>
+                <input type="text" name="username" required>
+            </div>
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" name="password" required>
+            </div>
+            <button type="submit" class="btn-primary">Login</button>
+        </form>
+        
+        <div class="link">
+            <a href="/register">Don't have an account? Register</a>
+        </div>
+        
+        <div class="info">
+            <p><strong>Test Accounts:</strong></p>
+            <p>Admin: admin/admin123</p>
+            <p>User: john_doe/pass123</p>
+            
+            {% if mode == 'vulnerable' %}
+            <p style="margin-top: 10px; color: #dc3545;"><strong>Try SQL Injection:</strong></p>
+            <p>Username: <code>' OR '1'='1' --</code></p>
+            {% else %}
+            <p style="margin-top: 10px; color: #28a745;"><strong>Protected Against:</strong></p>
+            <p>✓ SQL Injection ✓ XSS ✓ Rate Limiting</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

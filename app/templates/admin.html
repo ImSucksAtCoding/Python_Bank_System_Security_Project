@@ -1,0 +1,106 @@
+<!-- templates/admin.html
+Admin dashboard template page - for admins only -->
+
+{% extends "partials/layout.html" %}
+
+{% block title %}Admin Dashboard - SecureBank{% endblock %}
+
+{% block content %}
+<div class="header admin-header">
+    <div class="header-left">
+        <h1>🛡️ Admin Dashboard</h1>
+        <span class="mode-badge-header {% if mode == 'vulnerable' %}vulnerable{% else %}secured{% endif %}">
+            {% if mode == 'vulnerable' %}⚠️ VULNERABLE{% else %}🔒 SECURED{% endif %}
+        </span>
+    </div>
+    <div class="header-right">
+        <a href="/dashboard" class="btn-secondary">User View</a>
+        <a href="/logout" class="btn-danger">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+    {% if mode == 'vulnerable' %}
+    <div class="security-info vulnerable-info">
+        ⚠️ VULNERABLE ADMIN PANEL: Weak session management - Try session hijacking
+    </div>
+    {% else %}
+    <div class="security-info secured-info">
+        ✓ SECURED ADMIN PANEL: Proper authorization | Session validation | All data sanitized
+    </div>
+    {% endif %}
+    
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-value">{{ users|length }}</div>
+            <div class="stat-label">Total Users</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{{ transactions|length }}</div>
+            <div class="stat-label">Total Transactions</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">${{ "%.2f"|format(users|sum(attribute=4)) }}</div>
+            <div class="stat-label">Total Balance</div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h2>All Users</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Balance</th>
+                        <th>Account Type</th>
+                        <th>Admin</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user[0] }}</td>
+                        <td>{% if mode == 'secured' %}{{ user[1]|e }}{% else %}{{ user[1] }}{% endif %}</td>
+                        <td>${{ "%.2f"|format(user[4]) }}</td>
+                        <td>{% if mode == 'secured' %}{{ user[5]|e }}{% else %}{{ user[5] }}{% endif %}</td>
+                        <td>{{ "Yes" if user[6] == 1 else "No" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h2>All Transactions</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>User</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Description</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trans in transactions %}
+                    <tr>
+                        <td>{{ trans[0] }}</td>
+                        <td>{% if mode == 'secured' %}{{ trans[6]|e }}{% else %}{{ trans[6] }}{% endif %}</td>
+                        <td>{% if mode == 'secured' %}{{ trans[2]|e }}{% else %}{{ trans[2] }}{% endif %}</td>
+                        <td>${{ "%.2f"|format(trans[3]) }}</td>
+                        <td>{% if mode == 'secured' %}{{ trans[4]|e }}{% else %}{{ trans[4] }}{% endif %}</td>
+                        <td>{% if mode == 'secured' %}{{ trans[5]|e }}{% else %}{{ trans[5] }}{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
