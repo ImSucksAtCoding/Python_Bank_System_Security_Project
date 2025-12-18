@@ -94,16 +94,19 @@ def register_user(username, password):
     mode = get_security_mode()
     
     if mode == 'vulnerable':
-        # [X] VULNERABLE: SQL Injection, no password hashing
-        query = f"INSERT INTO users (username, password, password_hash, balance, account_type, is_admin) VALUES ('{username}', '{password}', '', 1000.00, 'Checking', 0)"
+        # [X] VULNERABLE: XSS allowed but SQL quotes escaped to prevent breakage
+        # This allows XSS payloads while keeping SQL functional
+        username_sql_safe = username.replace("'", "''")  # Escape single quotes for SQL only
+
+        query = f"INSERT INTO users (username, password, password_hash, balance, account_type, is_admin) VALUES ('{username_sql_safe}', '{password}', '', 1000.00, 'Checking', 0)"
         try:
             c.execute(query)
             conn.commit()
             conn.close()
             return {'success': True}
-        except:
+        except Exception as e:
             conn.close()
-            return {'success': False, 'error': 'Registration failed'}
+            return {'success': False, 'error': f'Registration failed ! Error: {str(e)}'}
     
     else:  # SECURED MODE (Validate username and password, password hashing before storing into database)
         if not validate_username(username):

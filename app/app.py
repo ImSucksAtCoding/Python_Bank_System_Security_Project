@@ -12,7 +12,7 @@ FOR EDUCATIONAL PURPOSE ONLY. IF YOU WANT TO TEST THE WEBAPP, DEPLOY IT LOCALLY 
 """
 
 from flask import Flask
-from config.settings import configure_app
+from config.settings import configure_app, get_security_mode
 from config.database import init_db
 from controllers.auth_controller import auth_bp
 from controllers.dashboard_controller import dashboard_bp
@@ -23,6 +23,21 @@ from controllers.security_mode import security_bp
 # App configuration
 app = Flask(__name__)
 configure_app(app)
+
+"""Configure autoescape based on security mode
+   Here, we will force the app to not auto-escape input in vulnerable mode
+   In modern Flask version, Jinja2 template is supported to escape the input
+   So we need to disable it to simulate the vulnerable version
+
+   Vulnerable version: Jinja2 disable
+   Secured version: Jinja2 enable
+   """
+@app.before_request
+def configure_autoescape():
+    if get_security_mode() == 'vulnerable':
+        app.jinja_env.autoescape = False  # Disable for vulnerable
+    else:
+        app.jinja_env.autoescape = True   # Enable for secured
 
 # Register blueprints routes
 app.register_blueprint(auth_bp)

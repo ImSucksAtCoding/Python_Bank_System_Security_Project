@@ -171,7 +171,7 @@ def xss_stored_attack():
             response = requests.post(f"{BASE_URL}/register", data=data)
             
             if response.status_code == 200 or response.status_code == 302:
-                print_success(f"Payload {i} injected successfully!")
+                print_success(f"Payload {i} injected successfully! Status code: {response.status_code}")
                 print_warning("XSS will execute when admin views user list")
         except Exception as e:
             print_error(f"Error with payload {i}: {e}")
