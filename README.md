@@ -80,48 +80,48 @@
 ## 📁 Project Structure
 
 ```
-unified_banking/
-│
-├── 📄 app.py                          # Main application entry point
-├── 📄 attack_scripts.py               # Automated vulnerability testing
-├── 📄 README.md                       # This file
-│
-├── 📂 config/
-│   ├── __init__.py
-│   ├── settings.py                    # App configuration & security mode
-│   └── database.py                    # Database initialization
-│
-├── 📂 controllers/
-│   ├── __init__.py
-│   ├── auth_controller.py             # Login/Register routes
-│   ├── dashboard_controller.py        # User dashboard
-│   ├── transaction_controller.py      # Transfers & balance checks
-│   ├── admin_controller.py            # Admin panel
-│   └── security_mode.py               # Mode switching
-│
-├── 📂 services/
-│   ├── __init__.py
-│   ├── rate_limit.py                  # Rate limiting
-│   ├── validators.py                  # Input validation
-│   ├── auth_service.py                # Authentication logic
-│   ├── session_service.py             # Session management
-│   └── transaction_service.py         # Transaction processing
-│
-├── 📂 middleware/
-│   ├── __init__.py
-│   ├── auth_required.py               # Login required decorator
-│   └── admin_required.py              # Admin authorization
-│
-├── 📂 templates/
-│   ├── 📂 partials/
-│   │   └── layout.html                # Base template
-│   ├── login.html                     # Login page
-│   ├── register.html                  # Registration
-│   ├── dashboard.html                 # User dashboard
-│   └── admin.html                     # Admin panel
-│
-└── 📂 static/
-    └── style.css                      # All styling
+Python_Bank_System_Security_Project             # Root project folder
+|
+├── 📄LICENSE                                     # MIT LICENSE
+├── 📄README.md                                   # This file
+├── 📂app                                         # Main app folder
+│   ├── 📄app.py                                  # Main entrypoint
+│   ├── 📂config                                  
+│   │   ├── __pycache__
+│   │   ├── database.py                         # Database initialization
+│   │   └── settings.py                         # App configuration, security mode
+│   ├── 📂controllers
+│   │   ├── __pycache__
+│   │   ├── admin_controller.py                 # Admin dashboard panel
+│   │   ├── auth_controller.py                  # Authorization controller (login/register, logout)
+│   │   ├── dashboard_controller.py             # Main dashboard panel
+│   │   ├── security_mode.py                    # Security toggle route
+│   │   └── transaction_controller.py           # Transaction & balance checks
+│   ├── 📂database
+│   │   └── banking_system.db                   # Main database
+│   ├── middleware
+│   │   ├── __pycache__
+│   │   ├── admin_required.py                   # Admin authorization middleware
+│   │   └── auth_required.py                    # Authorization middleware
+│   ├── 📂services
+│   │   ├── __pycache__
+│   │   ├── api_rate_limiter.py                 # API rate limiter
+│   │   ├── auth_service.py                     # Authorization service logic
+│   │   ├── session_service.py                  # Session service logic
+│   │   ├── transaction_service.py              # Transaction processing
+│   │   └── validators.py                       # Input validating functions
+│   ├── 📂static
+│   │   └── style.css                           # Styling file
+│   └── 📂templates
+│       ├── admin.html                          # Admin dashboard template
+│       ├── dashboard.html                      # Main dashboard template
+│       ├── login.html                          # Auth template (login/register)
+│       ├── partials
+│       │   └── layout.html                     # Shared layout
+│       └── register.html
+├── 📂attack_scripts
+    ├── README.md                               # Cyberattack scripts documentation
+    └── attack.py                               # Cyberattack scripts
 ```
 
 ---
@@ -138,12 +138,12 @@ unified_banking/
 
 ```bash
 # Option A: Clone with git
-git clone https://github.com/yourusername/securebank.git
-cd securebank
+git clone https://github.com/ImSucksAtCoding/Python_Bank_System_Security_Project.git
+cd Python_Bank_System_Security_Project/app
 
 # Option B: Download and extract ZIP
 # Then navigate to the folder
-cd unified_banking
+cd Python_Bank_System_Security_Project/app
 ```
 
 ### Step 2: Install Dependencies
@@ -174,7 +174,7 @@ python -c "import flask; print(flask.__version__)"
 
 ```bash
 # Navigate to project app directory
-cd unified_banking/app
+cd Python_Bank_System_Security_Project/app
 
 # Run the application
 python app.py
@@ -512,78 +512,6 @@ Beginner    → SQL Injection → XSS → Command Injection
 Intermediate → Session Hijacking → DoS
 Advanced    → Flask RCE (SSTI)
 ```
-
----
-
-## 📸 Screenshots
-
-### Login Page with Mode Switcher
-```
-┌─────────────────────────────────────┐
-│   Security Mode: [Vulnerable ▼]     │
-│        [Switch Mode]                │
-│                                     │
-│   ⚠️ VULNERABLE MODE ACTIVE         │
-│                                     │
-│   🏦 SecureBank Login               │
-│   ─────────────────────────         │
-│   Username: ___________________     │
-│   Password: ___________________     │
-│            [Login]                  │
-│                                     │
-│   Test: admin/admin123              │
-│   Try: ' OR '1'='1' --              │
-└─────────────────────────────────────┘
-```
-
-### Dashboard
-```
-┌──────────────────────────────────────────┐
-│ 🏦 SecureBank    [⚠️ VULNERABLE]  Logout │
-├──────────────────────────────────────────┤
-│ ⚠️ Try XSS, SQLi, command injection     │
-├──────────────────────────────────────────┤
-│ Account Overview                         │
-│ $5,420.50                               │
-│ ┌──────────┬──────────┬──────────┐     │
-│ │ Savings  │john_doe  │ ID: #2   │     │
-│ └──────────┴──────────┴──────────┘     │
-│                                          │
-│ Quick Transfer                           │
-│ [Recipient] [Amount] [Transfer]          │
-│                                          │
-│ Recent Transactions                      │
-│ ├ 2024-12-01  Deposit    $500.00       │
-│ └ 2024-12-02  Withdraw   $200.00       │
-└──────────────────────────────────────────┘
-```
-
----
-
-## 🧪 Testing Checklist
-
-### Pre-Testing
-- [ ] Application running on port 5000
-- [ ] Browser opened with DevTools (F12)
-- [ ] Security mode set to VULNERABLE
-- [ ] Test account credentials ready
-
-### Vulnerability Testing
-- [ ] SQL Injection - Login bypass
-- [ ] SQL Injection - Data extraction
-- [ ] XSS - Stored payload
-- [ ] XSS - Cookie theft
-- [ ] Command Injection - System commands
-- [ ] Session Hijacking - Admin access
-- [ ] DoS - Rapid requests
-- [ ] Flask RCE - SSTI
-
-### Verification in Secured Mode
-- [ ] Switch to SECURED mode
-- [ ] Retry all attacks
-- [ ] Confirm all blocked
-- [ ] Document differences
-
 ---
 
 ## 🛠️ Troubleshooting
@@ -685,17 +613,7 @@ of this software for EDUCATIONAL PURPOSES ONLY, subject to the conditions:
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
 ```
-
 ---
-
-## 📞 Contact & Support
-
-### Questions?
-
-- 📧 Email: security-education@example.com
-- 💬 Discussions: GitHub Issues
-- 📚 Documentation: [Wiki](#)
-- 🐛 Bug Reports: [Issues](#)
 
 ## 🎓 Learning Resources
 
