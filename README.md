@@ -655,5 +655,3 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
 - **Werkzeug** - Security utilities
 - **Jinja2** - Template engine
 - **Python** - Programming language
-
-Test line for webhook scan
